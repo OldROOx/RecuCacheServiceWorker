@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tareas</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlRhc2tNYXN0ZXIgUFdBIiwKICAic2hvcnRfbmFtZSI6ICJUYXNrTWFzdGVyIiwKICAiZGVzY3JpcHRpb24iOiAiQXBsaWNhY2nDs24gZGUgbGlzdGEgZGUgdGFyZWFzIGNvbiBTZXJ2aWNlIFdvcmtlciIsCiAgInN0YXJ0X3VybCI6ICIvIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmZmZmZmIiwKICAidGhlbWVfY29sb3IiOiAiIzAwMDAwMCIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbCwlM0NzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB3aWR0aD0nMTkyJyBoZWlnaHQ9JzE5MicgZmlsbD0nJTIzMDAwJyUzRSUzQ3JlY3Qgd2lkdGg9JzE5MicgaGVpZ2h0PScxOTInLyUzRSUzQ3RleHQgeT0nLjllbScgZm9udC1zaXplPSc5MCcgZmlsbD0nJTIzZmZmJyUzRVQlM0MvdGV4dCUzRSUzQy9zdmclM0UiLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #ffffff;
+            color: #000000;
+            line-height: 1.6;
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 30px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 8px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin: 0 8px 20px 8px;
+            background: #f9f9f9;
+        }
+
+        .status.online {
+            border-color: #000;
+            background: #000;
+            color: #fff;
+        }
+
+        .status.offline {
+            border-color: #999;
+            background: #999;
+            color: #fff;
+        }
+
+        .btn {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin: 8px;
+            border-radius: 0;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #333;
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-outline {
+            background: #fff;
+            color: #000;
+            border: 1px solid #000;
+        }
+
+        .btn-outline:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .btn-danger {
+            background: #fff;
+            color: #000;
+            border: 1px solid #999;
+        }
+
+        .btn-danger:hover {
+            background: #999;
+            color: #fff;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 0;
+            margin-bottom: 40px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .form-group input {
+            flex: 1;
+            padding: 16px 20px;
+            border: none;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            outline: none;
+        }
+
+        .form-group .btn {
+            margin: 0;
+            border-radius: 0;
+            border-left: 1px solid #e0e0e0;
+        }
+
+        .tasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .tasks-header h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #000;
+        }
+
+        .task-item {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .task-item:hover {
+            background: #fafafa;
+            margin: 0 -20px;
+            padding: 20px;
+        }
+
+        .task-item.completed {
+            opacity: 0.6;
+        }
+
+        .task-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #000;
+        }
+
+        .task-text {
+            flex: 1;
+            font-size: 1rem;
+            color: #000;
+        }
+
+        .task-text.completed {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .task-actions .btn {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            margin: 0;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 80px 20px;
+            color: #999;
+        }
+
+        .empty h3 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+
+        .empty p {
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .form-group {
+                flex-direction: column;
+            }
+
+            .form-group .btn {
+                border-left: none;
+                border-top: 1px solid #e0e0e0;
+            }
+
+            .tasks-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .task-item {
+                flex-wrap: wrap;
+            }
+
+            .task-actions {
+                margin-left: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<div class="header">
+    <h1>Tareas</h1>
+    <p>Service Worker PWA Projecto</p>
+    <div id="connectionStatus" class="status">Checando app</div>
+    <div>
+        <button class="btn btn-outline" id="installBtn" style="display:none">Instalar App</button>
+        <button class="btn btn-outline" id="notificationBtn">Activar Notificationes</button>
+    </div>
+</div>
+
+<!-- Add Task Form -->
+<div class="section">
+    <div class="form-group">
+        <input type="text" id="taskInput" placeholder="Agregar tarea" maxlength="100">
+        <button class="btn" onclick="addTask()">Agregar tarea</button>
+    </div>
+</div>
+
+<!-- Tasks List -->
+<div class="section">
+    <div class="tasks-header">
+        <h2>Tareas</h2>
+        <button class="btn btn-danger" onclick="clearAllTasks()">Limpiar todo</button>
+    </div>
+    <div id="taskList"></div>
+    <div id="emptyState" class="empty" style="display:none">
+        <h3>Sin Tareas Aun</h3>
+        <p>Agrega una tarea</p>
+    </div>
+</div>
+
+<script>
+    // Variables globales
+    let tasks = [];
+    let deferredPrompt;
+
+    // Referencias DOM
+    const taskInput = document.getElementById('taskInput');
+    const taskList = document.getElementById('taskList');
+    const emptyState = document.getElementById('emptyState');
+    const connectionStatus = document.getElementById('connectionStatus');
+    const installBtn = document.getElementById('installBtn');
+    const notificationBtn = document.getElementById('notificationBtn');
+
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then(registration => {
+                console.log('✅ Service Worker registrado:', registration.scope);
+            })
+            .catch(error => {
+                console.error('❌ Error al registrar SW:', error);
+            });
+    }
+
+    // PWA Install
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.style.display = 'inline-block';
+    });
+
+    installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log('📱 Install:', outcome);
+            deferredPrompt = null;
+            installBtn.style.display = 'none';
+        }
+    });
+
+    // Notificaciones
+    notificationBtn.addEventListener('click', async () => {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+            console.log('🔔 Notificaciones permitidas');
+            new Notification('Notifications Enabled', {
+                body: 'TaskMaster PWA listo para notificar',
+                icon: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkw_mXXQ9FJ9HgmW_B9QMv-gvOmndUaEI9SA&s'
+            });
+            notificationBtn.textContent = 'Notifications On';
+            notificationBtn.disabled = true;
+        }
+    });
+
+    // Conexión
+    function updateConnectionStatus() {
+        const isOnline = navigator.onLine;
+        connectionStatus.className = 'status ' + (isOnline ? 'online' : 'offline');
+        connectionStatus.textContent = isOnline ? 'Online' : 'Offline';
+    }
+
+    window.addEventListener('online', updateConnectionStatus);
+    window.addEventListener('offline', updateConnectionStatus);
+
+    // Gestión de tareas
+    function loadTasks() {
+        const saved = localStorage.getItem('tasks');
+        if (saved) {
+            tasks = JSON.parse(saved);
+            console.log('📂 Tareas cargadas desde localStorage:', tasks.length);
+        } else {
+            // Solo cargar tareas de ejemplo si NO hay datos guardados
+            tasks = [
+                { id: 1, text: 'Completar proyecto de Service Worker', completed: false },
+                { id: 2, text: 'Escribir el reporte en pdf :)', completed: false },
+                { id: 3, text: 'testear el offline', completed: true }
+            ];
+            saveTasks(); // Guardar las tareas de ejemplo
+            console.log('📝 Tareas de ejemplo creadas');
+        }
+        renderTasks();
+    }
+
+    function saveTasks() {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        console.log('💾 Tareas guardadas:', tasks.length, 'tareas');
+
+        // Debug: mostrar lo que se guardó
+        console.log('📋 Contenido guardado:', tasks.map(t => t.text));
+    }
+
+    function renderTasks() {
+        if (tasks.length === 0) {
+            taskList.innerHTML = '';
+            emptyState.style.display = 'block';
+            return;
+        }
+
+        emptyState.style.display = 'none';
+        taskList.innerHTML = tasks.map(task => `
+                <div class="task-item ${task.completed ? 'completed' : ''}">
+                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}
+                           onchange="toggleTask(${task.id})">
+                    <span class="task-text ${task.completed ? 'completed' : ''}">${task.text}</span>
+                    <div class="task-actions">
+                        <button class="btn btn-danger" onclick="deleteTask(${task.id})">Eliminar</button>
+                    </div>
+                </div>
+            `).join('');
+    }
+
+    function addTask() {
+        const text = taskInput.value.trim();
+        if (!text) return;
+
+        const newTask = {
+            id: Date.now(),
+            text: text,
+            completed: false,
+            offline: !navigator.onLine // Marcar si se creó offline
+        };
+
+        tasks.unshift(newTask);
+        saveTasks(); // Guardar INMEDIATAMENTE
+        renderTasks();
+        taskInput.value = '';
+
+        // Notificación
+        if (Notification.permission === 'granted') {
+            new Notification('New task added', {
+                body: text + (newTask.offline ? ' (offline)' : '')
+            });
+        }
+
+        console.log('➕ Tarea agregada:', text, navigator.onLine ? '(online)' : '(OFFLINE)');
+    }
+
+    function toggleTask(id) {
+        const task = tasks.find(t => t.id === id);
+        if (task) {
+            task.completed = !task.completed;
+            task.lastModified = Date.now(); // Timestamp de modificación
+            saveTasks(); // Guardar INMEDIATAMENTE
+            renderTasks();
+            console.log('✅ Tarea actualizada:', task.text, navigator.onLine ? '(online)' : '(OFFLINE)');
+        }
+    }
+
+    function deleteTask(id) {
+        if (confirm('Borrar Tarea?')) {
+            const taskText = tasks.find(t => t.id === id)?.text;
+            tasks = tasks.filter(t => t.id !== id);
+            saveTasks(); // Guardar INMEDIATAMENTE
+            renderTasks();
+            console.log('🗑️ Tarea eliminada:', taskText, navigator.onLine ? '(online)' : '(OFFLINE)');
+        }
+    }
+
+    function clearAllTasks() {
+        if (confirm('Delete all tasks?')) {
+            tasks = [];
+            saveTasks();
+            renderTasks();
+            console.log('🧹 Todas las tareas eliminadas');
+        }
+    }
+
+    // Enter para agregar tarea
+    taskInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addTask();
+    });
+
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('🚀 TaskMaster PWA iniciada');
+
+        // Cargar tareas PRIMERO
+        loadTasks();
+        updateConnectionStatus();
+
+        // Debug localStorage
+        console.log('🔍 Debug localStorage:');
+        console.log('- Datos guardados:', localStorage.getItem('tasks') ? 'SÍ' : 'NO');
+        console.log('- Tareas en memoria:', tasks.length);
+
+        // Stats
+        console.log('📊 Compatibilidad:');
+        console.log('- Service Worker:', 'serviceWorker' in navigator);
+        console.log('- Cache API:', 'caches' in window);
+        console.log('- localStorage:', 'localStorage' in window);
+        console.log('- Notificaciones:', 'Notification' in window);
+        console.log('- Conexión:', navigator.onLine ? 'Online' : 'Offline');
+    });
+</script>
+</body>
+</html>
